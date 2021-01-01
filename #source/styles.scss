@@ -1,0 +1,613 @@
+/* Reset ------------------------------------------------------------------------------------------------------------*/
+html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary, time, mark, audio, video {margin: 0;padding: 0;border: 0;font-size: 100%;vertical-align: baseline;}
+article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section {display: block;}
+body {line-height: 1.2;}
+ol {padding-left: 1.4em;list-style: decimal;}
+ul {padding-left: 1.4em;list-style: square;}
+table {border-collapse: collapse;border-spacing: 0;}
+
+/* Variables ------------------------------------------------------------------------------------------------------------*/
+// color
+$green-1: #00796b;
+$green-2: #80cbc4;
+
+$grey-1: #e7ecef;
+$grey-2: #263238;
+
+$red: #e53935;
+
+// transition
+$hoverTransition: all 0.12s linear;
+$movingTransition: all 0.2s linear;
+
+// mixin
+$maxWidth: 1400;
+
+@mixin adaptiveFont($pcSize, $mobileSize) {
+    $addSize: $pcSize - $mobileSize;;
+    $addMobileSize: $addSize + $addSize * 0.7;
+    @media (max-width: 767px) {
+        font-size: calc(#{$mobileSize + px} + #{$addMobileSize} * ((100vw - 320px) / #{$maxWidth}));}
+    @media (min-width: 767px) {
+        font-size: calc(#{$mobileSize + px} + #{$addSize} * (100vw / #{$maxWidth}));}
+    @media (min-width: 1280px) {
+        font-size: $pcSize + px;}}
+
+// font
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;600&display=swap');
+$font-family: 'Roboto Slab', serif;
+
+/* Default ---------------------------------------------------------------------------------------------------------------*/
+body, html {height: 100%;}
+body {color: #000; font-family: $font-family; font-size: 16px; width: 100vw; height: 100vh;}
+a {text-decoration: none; display: inline-block;}
+* {&:focus, &:active {outline: none;}}
+button {border: none; display: inline-block; padding: 0; background: transparent; cursor: pointer;}
+input {box-shadow: none; display: inline-block; border: none;}
+textarea {resize: none;}
+ul {list-style-type: none; padding: 0;}
+h1,h2,h3,h4,h5,h6 {font-weight: 400; padding: 0; margin: 0;}
+img {display: inline-block;}
+
+/* Styles ---------------------------------------------------------------------------------------------------------------*/
+.wrapper {
+    display: flex;
+    position: relative;
+    width: 100%;
+    height: 100%;}
+
+.navbar,
+.users-container,
+.chat-body {
+    height: 100%;}
+
+// navbar -------------------------------------
+.navbar {
+    z-index: 100;
+    width: 60px;
+    padding: 10px 0;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    background: $grey-2;
+    user-select: none;}
+
+.navbar__avatar {
+    position: relative;
+    overflow: hidden;
+    width: 47.5px;
+    height: 47.5px;
+    margin: 0 auto;
+    border: 2px solid $green-2;
+    border-radius: 50%;
+
+    img {
+        position: absolute;
+        border-radius: 50%;
+        max-width: 101%;
+        left: 0;
+        top: 0;
+        object-fit: cover;}
+    
+    @media(max-width: 1060px) {
+        display: none;}}
+
+.navbar__burger {
+    display: none;
+    position: relative;
+    cursor: pointer;
+    width: 40px;
+    height: 30px;
+    margin: 0 auto;
+    margin-top: 10px;
+    transition: $movingTransition;
+
+    &::before,
+    &::after,
+    span {
+        position: absolute;
+        display: inline-block;
+        transition: $movingTransition;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: #fff;}
+
+    &::before,
+    &::after {
+        content: "";}
+
+    &.active::before,
+    &.active::after {
+        background: $red;}
+        
+    &.active::before {
+        top: 12px;
+        transform: rotate(135deg);}
+
+    &.active::after {
+        bottom: 12px;
+        transform: rotate(-135deg);}
+
+    &::before {
+        top: 0;}
+
+    span {
+        bottom: 13px;}
+
+    &.active span {
+        background: transparent;
+        transform: scale(0);}
+
+    &::after {    
+        bottom: 0;}
+    
+    @media(max-width: 1060px) {
+        display: block;}}
+
+.navbar__buttons-wrapper {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;}
+
+.navbar__buttons-container {
+    display: inline-block;
+    width: 100%;}
+
+.notification {
+    position: absolute;
+    display: inline-block;
+    left: 15%;
+    top: 0;
+    width: 10px;
+    height: 10px;
+    background: $red;
+    border-radius: 50%;}
+
+.navbar__button {
+    text-align: center;
+    position: relative;
+    transition: $hoverTransition;
+
+    svg {
+        max-width: 55%;
+        height: auto;
+        transition: $hoverTransition;
+        .st0 {
+            transition: $hoverTransition;
+            fill: #fff;}
+        
+        &:hover {
+            .st0 {
+                fill: $green-2;
+                transition: $hoverTransition;}}}
+
+    &.active {
+        svg {
+            .st0 {
+                fill: $green-2;}
+            
+            &:hover {
+                .st0 {
+                    fill: $green-2;}}}}
+
+    & + .navbar__button {
+        margin-top: 55px;}}
+
+.navbar__button_inbox {padding: 5px 0 0 0;}
+.navbar__button_current-user {display: none;}
+
+// users container ----------------------------
+.side-container {
+    width: calc(32% - 60px);
+    overflow: auto;
+    overflow-x: hidden;
+    padding: 25px 15px 0 15px;
+    box-sizing: border-box;
+    background: $grey-1;
+    border-right: 2px solid #cacaca;
+
+    &.active {
+        left: 60px;
+        transition: $movingTransition;}
+
+    @media(max-width: 1060px) {
+        position: absolute;
+        z-index: 99;
+        width: 40%;
+        left: -40%;
+        top: 0;
+        height: 100%;
+        transition: $movingTransition;}
+    
+    @media(max-width: 660px) {
+        width: 60%;
+        left: -60%;}
+
+    @media(max-width: 450px) {
+        width: 70%;
+        left: -70%;}
+}
+
+.side-container::-webkit-scrollbar {
+    width: 10px;}
+    
+.side-container::-webkit-scrollbar-track {
+    background: #f9f9f9;}
+
+.side-container::-webkit-scrollbar-thumb {
+    background: #999;
+    border-radius: 4px;
+    border: 1px solid #fff}
+
+.side-container::-webkit-scrollbar-thumb:active {
+    background: #777;}
+
+
+// user default
+.form-shadow {
+    box-shadow: 0 0 10px $green-2;
+    transition: $hoverTransition;}
+
+.search-form {
+    border-radius: 5px;
+    overflow: hidden;
+    height: 27.5px;
+    width: 100%;
+    display: flex;
+    transition: $hoverTransition;}
+
+.search-form.form-shadow {
+
+    .search-form__arrow {
+        transition: $hoverTransition;
+        visibility: visible;
+        transform: scale(1);}
+
+    .search-form__search {
+        transition: $hoverTransition;
+        visibility: hidden;
+        transform: scale(0);}}
+
+.search-form__input {
+    font-size: 17px;
+    padding: 0 5px;
+    width: calc(100% - 35px);
+    border-radius: 5px 0 0 5px;
+    border: 1.5px solid #666;
+    border-right: none;}
+
+.search-form__button {
+    cursor: auto;
+    background: $grey-2;
+    height: 27.5px;
+    width: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px;
+    box-sizing: border-box;
+    position: relative;
+
+    svg {
+        display: inline-block;
+        width: 50%;
+        position: absolute;
+        .st0 {
+            fill: #fff;
+            transition: $hoverTransition;}}
+
+    .search-form__arrow {
+        transition: $hoverTransition;
+        visibility: hidden;
+        transform: scale(0);}
+
+    .search-form__search {
+        transition: $hoverTransition;
+        visibility: visible;
+        transform: scale(1);}
+
+    &:hover svg {
+        .st0 {
+            fill: $green-2;
+            transition: $hoverTransition;}}}
+
+.users-default__sorted {
+    padding: 7px 0;}
+
+.users-container {
+    margin-top: 10px;}
+
+.users-container__user {
+    display: flex;
+    align-items: center;
+    padding: 5px 0;
+    border-top: 1px solid #666;
+    border-bottom: 1px solid #666;
+    margin-bottom: -1px;
+    transition: $hoverTransition;
+
+    &:hover {
+        background: rgba(0, 0, 0, .1);
+        transition: $hoverTransition;}}
+
+.hidden {
+    display: none;}
+
+.users-container__avatar {
+    width: 17.5%;
+    min-width: 60px;
+    padding: 5px;
+    box-sizing: border-box;
+
+    img {
+        width: 90%;
+        border-radius: 50%;
+        border: 2px solid $green-2;}}
+
+.users-container__text {
+    width: 80%;}
+
+.users-container__username {
+    @include adaptiveFont(18, 13);
+    font-weight: 600;}
+
+.users-container__status {
+    @include adaptiveFont(16, 12)}
+
+
+// user profile
+.profile {
+    text-align: center;}
+
+.profile__avatar {
+    text-align: center;
+
+    img {
+        border: 2px solid $green-2;
+        border-radius: 50%;
+        max-width: 75%;}}
+
+.profile__username,
+.profile__status {
+    text-align: center;}
+
+.profile__username {
+    font-weight: 600;
+    font-size: 25px;}
+
+.profile__status {
+    margin-bottom: 7.5px;
+    font-size: 20px;}
+
+.profile__sendrequst {
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    width: 48%;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 5px;
+    padding: 5px 20px;
+    background: $green-1;
+    color: #fff;
+    transition: $hoverTransition;
+    
+    &:hover {
+        transition: $hoverTransition;
+        background: $green-2;}
+    
+    span {
+        display: inline-block;
+        margin-left: 10px;}
+
+    svg {
+        display: inline-block;
+        min-width: 23px;
+        width: 15%;}}
+
+.users-default,
+.profile,
+.inbox,
+.chats,
+.friends {
+    display: none;
+
+    &.active {
+        display: block;}}
+
+// chat body ----------------------------------
+.chat {
+    width: 68%;
+    background: #fff;
+
+    @media(max-width: 1060px) {
+        width: calc(100% - 60px);}}
+
+.chat__header {
+    height: 65px;
+    padding: 5px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background: $grey-2;
+
+    @media(max-width: 1060px) {
+        background: $grey-1;
+        border-bottom: 2px solid #cacaca;}}
+
+
+.chat__icon {
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+    width: 50px;
+    height: 50px;
+    box-sizing: border-box;
+    border: 2px solid $green-2;
+    border-radius: 50%;
+
+    img {
+        position: absolute;
+        box-sizing: border-box;
+        border-radius: 50%;
+        max-width: 101%;
+        left: 0;
+        top: 0;
+        object-fit: cover;}}
+
+.chat__text {
+    padding-left: 5px;}
+
+.chat__name {
+    color: #fff;
+    font-size: 18px;
+    font-weight: 600;
+
+    @media(max-width: 1060px) {
+        color: #000;}}
+
+.chat__members {
+    color: #fff;
+    font-size: 14.5px;
+    
+    @media(max-width: 1060px) {
+        color: $grey-2;}}
+
+.chat__settings {}
+
+.chat__main {
+    overflow: auto;
+    padding: 15px;
+    box-sizing: border-box;
+    height: calc(100vh - 110px);
+
+    &::-webkit-scrollbar {
+        width: 10px;}
+        
+    &::-webkit-scrollbar-track {
+        background: #f9f9f9;}
+    
+    &::-webkit-scrollbar-thumb {
+        background: #999;
+        border-radius: 4px;
+        border: 1px solid #fff}
+    
+    &::-webkit-scrollbar-thumb:active {
+        background: #777;}}
+
+.chat__message-body {
+    display: flex;
+
+    .chat__message {
+        max-width: 45%;
+        padding: 2.5px 7.5px;
+        border-radius: 5px;
+    
+        @media(max-width: 1060px) {
+            max-width: 60%;}}
+
+    & + .chat__message-body {
+        margin-top: 10px;}}
+
+.chat__time {
+    text-align: right;
+    font-size: 15px;}
+
+.chat__message-body_my-message {
+    justify-content: flex-end;
+
+    .chat__message {
+        background: $green-2;}
+    
+    .chat__time {
+        color: $grey-2;}}
+
+.chat__message-body_chat-message {
+    justify-content: center;
+    text-align: center;
+
+    .chat__message {
+        display: inline-block;
+        background: $green-1;
+        color: #fff;}}
+
+.chat__message-body_user-message {
+    justify-content: flex-start;
+
+    .chat__message {
+        background: $grey-1;
+        color: $grey-2;}
+    
+    .chat__username {
+        cursor: default;
+        display: inline-block;
+        color: $green-1;
+        border-bottom: 2px solid transparent;
+        font-weight: 600;
+        transition: $hoverTransition;
+
+        &:hover {
+            transition: $hoverTransition;
+            border-color: $green-1;}}
+        
+    .chat__time {
+        color: $grey-2;}}
+
+
+
+.chat__footer{
+    background: $grey-1;
+    border-top: 2px solid #cacaca;
+    box-sizing: border-box;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;}
+
+.chat__form {
+    display: inline-flex;
+    width: 80%;
+    border-radius: 5px;
+    overflow: hidden;
+    transition: $hoverTransition;
+    
+
+    input {
+        font-size: 17px;
+        padding: 3px 5px;
+        box-sizing: border-box;
+        width: 100%;
+        border: 1.5px solid #666;
+        border-radius: 5px 0 0 5px;
+        border-right: none;}}
+
+.chat__button {
+    cursor: pointer;
+    background: $green-2;
+    height: 28.5px;
+    width: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px;
+    box-sizing: border-box;
+    position: relative;
+
+    svg {
+        display: inline-block;
+        width: 50%;
+        position: absolute;
+        .st0 {
+            fill: $grey-2;
+            transition: $hoverTransition;}}
+
+    &:hover svg .st0 {
+            transition: $hoverTransition;
+            fill: $green-1;}}
